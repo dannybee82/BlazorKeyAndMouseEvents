@@ -1,0 +1,92 @@
+﻿@if (Positions != null && Positions.Any())
+{
+	if (Positions.Count > 1)
+	{
+		for(int i = 0; i < Positions.Count - 1; i++) {
+			var current = Positions[i];
+			var next = Positions[i + 1];
+
+			int x1 = GetXFromString(current);
+			int y1 = GetYFromString(current) - 5;
+
+			int x2 = GetXFromString(next);
+			int y2 = GetYFromString(next) - 5;
+
+			int pointX = x1;
+			int pointY = y1;
+
+			@*int restX = Math.Abs(x2 - x1) / 2;
+			int restY = Math.Abs(y2 - y1) / 2*@;
+
+
+
+			int angle = (int) Math.Ceiling( CalculateAngle(x1, y1, x2, y2) );						
+			int distance = (int) Math.Ceiling( CalculateDistance(x1, y1, x2, y2) );
+
+			<span class="drawLine"
+				 style="height:10px;
+						background:red;
+						position:absolute;
+						top:@CreateCss(pointY);
+						left:@CreateCss(pointX);
+						transform:rotate(@GetAngle(angle));
+						width:@(CreateCss(distance));
+						z-index:1" />
+
+			<div>ANGLE = @angle - Distance: @distance - end:x = @CreateCss(pointX) - end:y = @CreateCss(pointY) </div>			
+		}
+	}
+}
+
+
+@code {
+	//Deze module werkt niet ....
+
+	[Parameter]
+	public List<string> Positions { get; set; } = default!;
+
+	private int GetXFromString(string s) {
+		string[] splitted = s.Split(",");
+		return Convert.ToInt32(splitted[0]);
+	}
+
+	private int GetYFromString(string s)
+	{
+		string[] splitted = s.Split(",");
+		return Convert.ToInt32(splitted[1]);
+	}
+
+	private double CalculateAngle(int x1, int y1, int x2, int y2)
+	{
+		var deltaX = Math.Pow((x2 - x1), 2);
+		var deltaY = Math.Pow((y2 - y1), 2);
+
+		var radian = Math.Atan2((y2 - y1), (x2 - x1));
+		var angle = (radian * (180 / Math.PI) + 360) % 360;
+
+		return angle;
+	}
+
+
+	private string GetAngle(double deg) {
+		return deg + "deg";
+	}
+
+	private string CreateCss(int pos)
+	{
+		return pos + "px";
+	}
+
+	private string CreateCss(double pos)
+	{
+		return pos + "px";
+	}
+
+	private double CalculateDistance(int x1, int y1, int x2, int y2)
+	{
+		double distance = Math.Sqrt((Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2)));
+		return distance;
+	}
+
+
+}

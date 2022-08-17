@@ -1,0 +1,103 @@
+﻿@if (Show)
+{
+    <div class="dialog-container">
+        <div class="dialog">
+            <div class="dialog-title">
+                <h2>@Title</h2>
+            </div>
+
+            <div class="dialog-body">
+                @ChildContent
+                <p>Time left for Reset: <span class="timeleftSpan">@roundedTime</span></p>
+            </div>
+
+            <div class="dialog-buttons">
+                <button class="btn btn-success ml-auto" @onclick="OnConfirm" @onclick:stopPropagation="true">@ConfirmText</button>
+                <button class="btn btn-secondary mr-auto" @onclick="OnCancel" @onclick:stopPropagation="true">@CancelText</button>
+            </div>
+
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public string CancelText { get; set; } = "Cancel";
+
+    [Parameter]
+    public string ConfirmText { get; set; } = "OK";
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public bool Show { get; set; }
+
+    private EventCallback _OnCancel;
+
+    [Parameter]     
+    public EventCallback OnCancel { get { RemoveTimer(); return _OnCancel; } set { _OnCancel = value; } }
+    //public EventCallback OnCancel { get; set; }
+
+    private EventCallback _OnConfirm;
+
+    [Parameter] 
+    public EventCallback OnConfirm { get { RemoveTimer(); return _OnConfirm; } set { _OnConfirm = value; } }
+    //public EventCallback OnConfirm { get; set; }
+
+    [Parameter]
+    public int TimeInSeconds { get; set; } = default!;
+
+    //A built-in timer.    
+    private Timer _updateTimer = null!;
+    private int roundedTime;
+    private int countDown = 0;
+
+    //Hieronder: OnInitializedAsync() verbeteren. Nu is de methode synchroon.
+    protected override async Task OnInitializedAsync()    
+    {
+        TimeInSeconds++;
+        
+        _updateTimer = new Timer(
+            callback: (_) => InvokeAsync(async () => await UpdateCounter()),
+            state: null, 
+            dueTime: 0,
+            period: 1000);       
+    }
+
+    private async Task UpdateCounter()
+    {
+        TimeInSeconds--;
+        roundedTime = TimeInSeconds;
+
+        StateHasChanged();
+
+        if (TimeInSeconds == 0)
+        {
+            if(_updateTimer != null) {
+                RemoveTimer();
+            }
+
+            //Show = false;
+
+            if(Show) {
+                TimeInSeconds = countDown;
+                await OnConfirm.InvokeAsync();
+            }
+         }
+        
+    }
+
+    private void RemoveTimer()
+    {
+        if (_updateTimer != null)
+        {
+            _updateTimer = null;
+        }
+    }
+
+}

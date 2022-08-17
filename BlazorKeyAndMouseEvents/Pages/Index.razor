@@ -1,0 +1,189 @@
+﻿@page "/"
+@using BlazorKeyAndMouseEvents.Data
+
+<PageTitle>Index</PageTitle>
+
+<div class="container" @oncontextmenu="HandleMouseClick" @oncontextmenu:preventDefault="true">
+	<div class="outerDiv" @onmousemove="OuterMouseMove" @onclick="@((MouseEventArgs e) => {ClickedAtDiv = 0;HandleMouseClick(e);})" style="@outerStyle" >
+	  @outerPos
+
+	  <div class="innerDiv" @onmousemove="InnerMouseMove"@onmousemove:stopPropagation="true" 
+	  @onclick="@((MouseEventArgs e) => {ClickedAtDiv = 1;HandleMouseClick(e);})"  @onclick:stopPropagation="true" style="@innerStyle">
+	  @innerPos
+	  </div>
+	</div>
+
+	<DrawPointsComponent Positions="@positions" />
+		
+	<PopUpMenu LocationPopup=@locationPopup ShowDialog=@ShowDialog RandomColors=@RandomColors ClosePopUpMenu=@ClosePopUpMenu />
+
+	<CollapsableMenu ButtonText="" IsCollapsed=@isColorSelectionCollapsed PredefinedColorsNames=@predefinedColors MethodToUse=@ChangeBackgroundColor
+	Location=@locationColorSelection  />
+	
+	<DialogContainer Title="Reset All" Show="showDialogContainer" OnConfirm="ResetAll" OnCancel="KeepAll" TimeInSeconds=5 >
+		<ChildContent>
+			<p>Do you want to reset all changes?</p>
+		</ChildContent>
+	</DialogContainer>		
+
+</div>
+
+<PositionsComponent Positions=@positions RemoveMethod=@RemovePosition ClearAll=@ClearPositions />
+
+<div class="information">
+	<br />
+	<strong>Klik = Positie Toevoegen.</strong><br />
+	<strong>CTRL + Klik = Verander kleur.</strong><br />
+	<strong>Rechtermuisknop = Popup-Menu</strong>
+	<br /><br />	
+</div>
+
+@code {
+
+	/*
+	 * Defaults, etc.
+	 * 
+	 */
+
+	private string[] predefinedColors = PredefinedColorsFonts.GetAllPredifinedColors();
+
+	public int ClickedAtDiv { get; set; } = 0;
+
+	private string outerPos = "???";
+	private string innerPos = "???";
+
+	private List<String> positions = new List<String>();
+
+	private string outerStyle = "background-color:yellow";
+	private string innerStyle= "background-color:green";
+
+	private string outerPrimaryColor = "yellow";
+	private string innerPrimaryColor = "green";
+	
+	private bool showPopupMenu = false;
+	private string locationPopup = "visibility:hidden";
+
+	private bool showDialogContainer = false;
+
+	private bool isColorSelectionCollapsed = true;
+	private string locationColorSelection = "";
+
+	/*
+	 * Methoden
+	 * 
+	 */
+
+	private void OuterMouseMove(MouseEventArgs e) 
+	{
+		outerPos = $"Muis op positie: {e.ClientX}x{e.ClientY}";
+	}		
+
+	private void InnerMouseMove(MouseEventArgs e) {
+		innerPos = $"Muis op positie: {e.ClientX}x{e.ClientY}";
+	}
+
+	private void HandleMouseClick(MouseEventArgs e)
+	{
+		if(e.CtrlKey) 
+		{
+			if(ClickedAtDiv == 0)
+			{
+				isColorSelectionCollapsed = false;
+				locationColorSelection = "visibility:visible;left:" + e.ClientX + "px;top:" + e.ClientY + "px";
+			}
+			else
+			{
+				isColorSelectionCollapsed = false;
+				locationColorSelection = "visibility:visible;left:" + e.ClientX + "px;top:" + e.ClientY + "px";
+			}
+		} 
+		else if(e.Button == 2) 
+		{
+			showPopupMenu = !showPopupMenu;
+			locationPopup = (showPopupMenu) ? "visibility:visible;left:" + e.ClientX + "px;top:" + e.ClientY + "px": "visibility:hidden";
+		}
+		else
+		{
+			positions.Add( $"{e.ClientX},{e.ClientY}" );
+		}		
+	}
+
+	private void ChangeBackgroundColor(int value) {
+		isColorSelectionCollapsed = true;
+		locationColorSelection = "visibility:hidden";
+
+		if (value > -1 && value < predefinedColors.Length)
+		{
+			if (ClickedAtDiv == 0)
+			{
+				outerStyle = "background-color:" + predefinedColors[value];
+			}
+			else
+			{
+				innerStyle = "background-color:" + predefinedColors[value];
+			}
+		}
+	}
+
+	private void ShowDialog() {
+		showDialogContainer = true;
+	}
+
+	private void ResetAll()
+	{
+		showDialogContainer = false;
+
+		outerPos = "???";
+		innerPos = "???";
+		outerStyle = "background-color:" + outerPrimaryColor;
+		innerStyle = "background-color:" + innerPrimaryColor;
+
+		positions.Clear();
+
+		showPopupMenu = !showPopupMenu;
+		locationPopup = "visibility:hidden";		
+	}
+
+	private void ClearPositions() {
+		Console.WriteLine("METHOD????");
+		positions.Clear();
+	}
+
+	private void KeepAll() {
+		showDialogContainer = false;
+	}
+
+	private void RandomColors() {
+		int[] rgbRandom01 = GenerateRandomNumbers(0, 255, 3);
+		int[] rgbRandom02 = GenerateRandomNumbers(0, 255, 3);
+
+		outerStyle = "background-color:rgb(" + rgbRandom01[0] + "," + rgbRandom01[1] + "," + rgbRandom01[2] + ")";
+		innerStyle = "background-color:rgb(" + rgbRandom02[0] + "," + rgbRandom02[1] + "," + rgbRandom02[2] + ")";
+	}
+
+	private int[] GenerateRandomNumbers(int min, int max, int amount)
+	{
+		Random r = new Random();
+		int[] arr = new int[amount];
+
+		for (int i = 0; i < arr.Length; i++)
+		{
+			arr[i] = r.Next(min, max + 1);
+		}
+
+		return arr;
+	}
+
+	private void RemovePosition(int target) {
+		if (positions != null && positions.Any())
+		{
+			positions.RemoveAt(target);
+		}
+	}
+
+	private void ClosePopUpMenu() {
+		showPopupMenu = false;
+		locationPopup = "visibility:hidden";
+	}
+
+}

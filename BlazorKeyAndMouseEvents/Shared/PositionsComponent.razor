@@ -1,0 +1,54 @@
+﻿<div class="clickedAtPostions">
+	<div class="showPositionsMenuBar">		
+		<div class="showPositionsButton" @onclick="ShowCollapsableMenu"><img src="/images/minimize.png" alt="Minimaliseren" title="Minimaliseren" /></div>
+		<div class="showPositionsButton" @onclick="@ClearAll"><img src="/images/clear.png" alt="Clear" title="Clear All" /></div>
+		<div class="showPositionsButton"></div>
+	</div>
+	@if (Positions != null && Positions.Any())
+	{
+		for (int i = 0; i < Positions.Count; i++)
+		{
+			var target = i;
+			<div class="showPositionsContainer @SettingsMenuCssClass">
+				<div class="showPositionText">Positie (x,y): @Positions[i]</div>
+				<div class="showPositionRemoveIcon" onclick="@(() => {CurrentValue = target; GetValue();})" >
+					<img src="images/remove.png" alt="Remove Position" />
+				</div>
+			</div>
+		}
+	} else {
+		<div class="showPositionsContainer @SettingsMenuCssClass">
+			<p>Nog geen posities.</p>
+		</div>
+	}
+</div>
+
+@code {
+	[Parameter]
+	public List<string> Positions { get; set; } = default!;
+
+	[Parameter]
+	public EventCallback<int> RemoveMethod { get; set; }
+
+	[Parameter]
+	public EventCallback ClearAll { get; set; }
+
+	private int CurrentValue { get; set; } = -1;
+
+	private bool isCollapsed = false;
+	private string? SettingsMenuCssClass => isCollapsed ? "collapse" : null;
+
+	private async void GetValue()
+	{
+		if (CurrentValue > -1)
+		{
+			await RemoveMethod.InvokeAsync(CurrentValue);
+		}
+	}
+
+	private void ShowCollapsableMenu()
+	{
+		isCollapsed = !isCollapsed;
+	}
+
+}

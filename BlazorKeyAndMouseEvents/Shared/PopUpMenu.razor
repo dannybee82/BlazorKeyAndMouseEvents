@@ -1,0 +1,31 @@
+﻿<div class="popupMenu" style="@LocationPopup">
+	<ul>
+		<li @onclick="ShowDialog" @onclick:preventDefault="true">
+			<div class="popupMenuIcon"><img src="images/reset.png" alt="Reset All" /></div>
+			<div class="popupMenuText">Reset All</div>
+		</li>
+		<li @onclick="RandomColors" @onclick:preventDefault="true">
+			<div class="popupMenuIcon"><img src="images/random.png" alt="Random Colors" /></div>
+			<div class="popupMenuText">Random Colors</div>
+		</li>
+		<li @onclick="ClosePopUpMenu" @onclick:preventDefault="true">
+			<div class="popupMenuIcon"><img src="images/close.png" alt="Close" /></div>
+			<div class="popupMenuText">Close</div>
+		</li>
+	</ul>
+</div>
+
+@code {
+	[Parameter]
+	public string LocationPopup { get; set; } = "visibility:hidden";
+
+	[Parameter]
+	public EventCallback ShowDialog { get; set; }
+
+	[Parameter]
+	public EventCallback RandomColors { get; set; }
+
+	[Parameter]
+	public EventCallback ClosePopUpMenu { get; set; }
+
+}

@@ -1,0 +1,288 @@
+﻿/*
+ *   Index
+ */
+
+.container {
+    padding: 25px;
+    float:left;
+    border: 1px solid black;
+    border-radius: 5px;
+    max-width: 50%;
+    max-height: 50%;
+    background-color: #f2f2f2;
+}
+
+.outerDiv {
+    width: 400px;
+    height: 400px;
+    background: yellow;
+}
+
+.innerDiv {
+    width: 300px;
+    height: 300px;
+    background: green;
+    margin: 50px
+}
+
+
+.container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+/*
+ * PopUpMenu
+ *
+ */
+
+.popupMenu {
+    position: absolute;
+    width: 300px;
+    height: 250px;
+    background-color: lightgray;
+    opacity: 0.8;
+    z-index: 10;
+    padding:25px;
+}
+
+.popupMenu ul {
+    list-style:none;
+    float:left;
+    clear:both;
+
+}
+
+    .popupMenu ul li {
+        list-style: none;
+        cursor: pointer;
+        background-color: #fff;
+        color: #000;
+        border-radius: 5px;
+        display: block;
+        margin-top: 15px;
+        height: 48px;
+        width: 200px;
+        float:left;
+        clear:both
+    }
+
+.popupMenuIcon {    
+    float: left;
+    padding-left: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right:15px;
+}
+
+.popupMenuText { 
+    padding-top: 11px;
+    text-align:left;
+   
+}
+
+/*
+ * Collapsable menu
+ *
+ */
+
+#SettingsContainer {
+    position: absolute;
+    width: 500px;
+    height: auto;
+    background-color: lightgray;
+    opacity: 0.90;
+    z-index: 10;
+    padding: 25px;
+    border:2px solid black;
+
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    overflow: hidden;    
+}
+
+.SettingsMenuItem {
+    list-style-type: none;
+    width: 30px;
+    height: 30px;
+    margin-top: 5px;
+    float: left;
+    clear: right;
+    margin-right: 1px;
+    padding: 5px;
+    border: 1px solid #000;
+    border-radius: 5px
+}
+
+    .SettingsMenuItem:last-child {
+        margin-bottom: 5px;
+    }
+
+    .SettingsMenuItem:hover {
+        cursor: default
+    }
+
+.colorSelectionCloseButton{
+    position:relative;
+    float:right;
+    margin-top:25px;
+}
+
+.showPositionsMenuBar {
+    float: left;
+    width: 300px;
+    display: block;
+    clear: right;
+    background-image: linear-gradient(lightblue, white);
+    height: 40px;
+}
+
+.showPositionsButton {
+    position:relative;
+    float:right;
+    height:24px;
+    width:24px;
+    margin-right:10px;
+    margin-top:4px;
+}
+
+.showPositionsButton:hover {
+    border:1px dashed lightgray;
+}
+
+/*
+ * Positions component.
+ *
+ */
+
+.clickedAtPostions {
+    float: left;
+    width: 350px;
+    height: 500px;
+    display: block;
+    margin-left: 50px;
+    clear: right;
+    overflow: auto;
+}
+
+
+.showPositionsContainer {
+    display: block;
+    width: 300px;
+    float: left;
+    clear: both;
+    margin-top: 10px;
+    border: 1px dashed #000;
+    padding: 10px
+}
+
+.showPositionText {
+    text-decoration: solid;
+    font-size: 16px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    float: left;
+    padding-right: 25px;
+    padding-top: 5px;
+}
+
+.showPositionRemoveIcon {
+    float: right;
+    padding-right: 15px
+}
+
+.information{
+    display:block;
+    float:left;
+    width:600px;
+}
+
+    /*
+    * CSS DialogContainer
+    *
+    */
+
+.dialog-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2000;
+    display: flex;
+    animation: dialog-container-entry 0.2s;
+}
+
+@keyframes dialog-container-entry {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.dialog {
+    background-color: white;
+    box-shadow: 0 0 12px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    z-index: 2000;
+    align-self: center;
+    margin: auto;
+    width: 25%;
+    max-height: calc(100% - 3rem);
+    animation: dialog-entry 0.4s;
+    animation-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
+}
+
+@keyframes dialog-entry {
+    0% {
+        transform: translateY(30px) scale(0.95);
+    }
+
+    100% {
+        transform: translateX(0px) scale(1.0);
+    }
+}
+
+.dialog-title {
+    background-color: #444;
+    color: #fff2cc;
+    padding: 1.3rem 0.5rem;
+}
+
+    .dialog-title h2 {
+        color: white;
+        font-size: 1.4rem;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.3rem;
+    }
+
+.dialog-body {
+    flex-grow: 1;
+    padding: 0.5rem 3rem 1rem 0.5rem;
+}
+
+.dialog-buttons {
+    height: 4rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    padding: 0 1rem;
+}
+
+.btn-success{
+    margin-right:25px;
+}
+
+.timeleftSpan {
+    color:red;
+    font-weight:bold;
+    font-size:16px;
+}
+

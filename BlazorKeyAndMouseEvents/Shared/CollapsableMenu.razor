@@ -1,0 +1,57 @@
+﻿@if (!string.IsNullOrEmpty(ButtonText))
+{
+    <div class="menuButton">
+        <button class="ButtonSettingsMenu" @onclick="ShowCollapsableMenu"><span class="buttonText">@ButtonText</span><span class="triangle"></span></button>
+    </div>
+}
+
+<div class="@SettingsMenuCssClass" id="SettingsContainer" style="@Location">
+    <ul>
+        @if ((PredefinedColorsNames != null))
+        {
+            @for (int i = 0; i < PredefinedColorsNames.Length; i++)
+            {
+                int index = i;
+                <li class="SettingsMenuItem" onclick=@(() => {CurrentValue = index; GetValue();}) style="background-color: @PredefinedColorsNames[i]" />
+            }
+        }
+    </ul>
+    <div class="colorSelectionCloseButton" @onclick="@(() => {CurrentValue = -1; GetValue();})"><img src="images/close.png" alt="Close" />Sluiten</div>
+</div>
+
+@code {
+    //Getters and setters.
+    [Parameter]
+    public string? ButtonText { get; set; }
+
+    [Parameter]
+    public bool IsCollapsed { get; set; }
+
+    [Parameter]
+    public string[]? PredefinedColorsNames { get; set; }
+
+    [Parameter]
+    public EventCallback<int> MethodToUse { get; set; }
+
+    [Parameter]
+    public string Location { get; set; } = "visibility:hidden";
+
+    //private fields, etc.
+    private string? SettingsMenuCssClass => IsCollapsed ? "collapse" : null;
+
+    private void ShowCollapsableMenu()
+    {
+        IsCollapsed = !IsCollapsed;
+    }
+
+    private int CurrentValue { get; set; } = -1;
+
+    private async void GetValue()
+    {
+        //if (CurrentValue > -1) {
+            await MethodToUse.InvokeAsync(CurrentValue);
+        //}
+    }
+
+
+}
