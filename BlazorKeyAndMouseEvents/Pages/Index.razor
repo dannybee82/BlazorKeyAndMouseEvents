@@ -3,12 +3,12 @@
 
 <PageTitle>Index</PageTitle>
 
-<div class="container" @oncontextmenu="HandleMouseClick" @oncontextmenu:preventDefault="true">
-	<div class="outerDiv" @onmousemove="OuterMouseMove" @onclick="@((MouseEventArgs e) => {ClickedAtDiv = 0;HandleMouseClick(e);})" style="@outerStyle" >
+<div class="container" @oncontextmenu="HandleMouseClick" @oncontextmenu:preventDefault="true" @onkeydown="HandleKeys" tabindex="0" @ref="element" >
+	<div class="outerDiv" @onmousemove="OuterMouseMove" @onclick="@((MouseEventArgs e) => {ClickedAtDiv = 0;HandleMouseClick(e);})" style="@outerStyle" @onkeydown="HandleKeys" tabindex="0" @ref="element">
 	  @outerPos
 
-	  <div class="innerDiv" @onmousemove="InnerMouseMove"@onmousemove:stopPropagation="true" 
-	  @onclick="@((MouseEventArgs e) => {ClickedAtDiv = 1;HandleMouseClick(e);})"  @onclick:stopPropagation="true" style="@innerStyle">
+	  <div class="innerDiv" @onmousemove="InnerMouseMove"@onmousemove:stopPropagation="true"
+			 @onclick="@((MouseEventArgs e) => {ClickedAtDiv = 1;HandleMouseClick(e);})" @onclick:stopPropagation="true" style="@innerStyle" @onkeydown="HandleKeys" tabindex="0" @ref="element"p>
 	  @innerPos
 	  </div>
 	</div>
@@ -32,9 +32,10 @@
 
 <div class="information">
 	<br />
-	<strong>Klik = Positie Toevoegen.</strong><br />
-	<strong>CTRL + Klik = Verander kleur.</strong><br />
-	<strong>Rechtermuisknop = Popup-Menu</strong>
+	<strong>Click = Add Position.</strong><br />
+	<strong>CTRL + Click = Change Color.</strong><br />
+	<strong>Right Mousebutton OR: Press 'P' = Popup-Menu</strong><br />
+	<strong>Press 'C' to Clear all</strong>
 	<br /><br />	
 </div>
 
@@ -59,7 +60,7 @@
 
 	private string outerPrimaryColor = "yellow";
 	private string innerPrimaryColor = "green";
-	
+
 	private bool showPopupMenu = false;
 	private string locationPopup = "visibility:hidden";
 
@@ -68,18 +69,20 @@
 	private bool isColorSelectionCollapsed = true;
 	private string locationColorSelection = "";
 
+	private ElementReference element;
+
 	/*
-	 * Methoden
-	 * 
-	 */
+	* Methods
+	* 
+	*/
 
 	private void OuterMouseMove(MouseEventArgs e) 
 	{
-		outerPos = $"Muis op positie: {e.ClientX}x{e.ClientY}";
+		outerPos = $"Mouse at position of Client: {e.ClientX}x{e.ClientY}";
 	}		
 
 	private void InnerMouseMove(MouseEventArgs e) {
-		innerPos = $"Muis op positie: {e.ClientX}x{e.ClientY}";
+		innerPos = $"Mouse at position of Client: {e.ClientX}x{e.ClientY}";
 	}
 
 	private void HandleMouseClick(MouseEventArgs e)
@@ -106,6 +109,21 @@
 		{
 			positions.Add( $"{e.ClientX},{e.ClientY}" );
 		}		
+	}
+
+	private void HandleKeys(KeyboardEventArgs args) 
+	{
+		if (args.Key.Equals("p"))
+		{
+			showPopupMenu = !showPopupMenu;
+			locationPopup = (showPopupMenu) ? "visibility:visible;left:400px;top:115px": "visibility:hidden";
+		}
+
+		if (args.Key.Equals("c"))
+		{
+			ResetAll();
+		}
+
 	}
 
 	private void ChangeBackgroundColor(int value) {
@@ -145,7 +163,6 @@
 	}
 
 	private void ClearPositions() {
-		Console.WriteLine("METHOD????");
 		positions.Clear();
 	}
 

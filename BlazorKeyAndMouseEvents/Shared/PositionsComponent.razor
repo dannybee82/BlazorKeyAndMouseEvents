@@ -10,7 +10,7 @@
 		{
 			var target = i;
 			<div class="showPositionsContainer @SettingsMenuCssClass">
-				<div class="showPositionText">Positie (x,y): @Positions[i]</div>
+				<div class="showPositionText">Position (x,y): @Positions[i]</div>
 				<div class="showPositionRemoveIcon" onclick="@(() => {CurrentValue = target; GetValue();})" >
 					<img src="images/remove.png" alt="Remove Position" />
 				</div>
@@ -18,7 +18,7 @@
 		}
 	} else {
 		<div class="showPositionsContainer @SettingsMenuCssClass">
-			<p>Nog geen posities.</p>
+			<p>No Positions Yet.</p>
 		</div>
 	}
 </div>
